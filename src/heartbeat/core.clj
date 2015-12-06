@@ -46,19 +46,28 @@
 
 (inst-fx! testy fx-distortion2)
 
+(defn buzz-player
+  "Synth loop"
+  [beat]
+  (let [freq 50]
+    (at (metro beat) (testy freq 0.5 5 0))
+    (when (= 0 (mod beat 8)) (at (metro (+ 0.5 beat)) (testy freq 0.5 5 0))))
+  (apply-by (metro (inc beat)) #'buzz-player (inc beat) [])
+  )
 
-(defn player
+(defn drum-player
   "Drum program loop suitable for live editing"
   [beat]
   (doseq [x [0 1]]
     (at (metro (+ (* x 0.5) beat)) (closed-hat))
     )
-  (at (metro beat) (kick) (testy 50 0.4 5 6))
-  (when (= 0 (mod beat 8)) (at (metro (+ 0.5 beat)) (kick) (testy 60 0.4 5 6)))
+  (at (metro beat) (kick))
+  (when (= 0 (mod beat 8)) (at (metro (+ 0.5 beat)) (kick)))
   (at (metro (+ 0.5 beat)) (open-hat))
-  (apply-by (metro (inc beat)) #'player (inc beat) [])
+  (apply-by (metro (inc beat)) #'drum-player (inc beat) [])
   )
 
 ;(reset! basebpm 200)
 
-;(player (metro))
+;(drum-player (metro))
+(buzz-player (metro))
