@@ -4,11 +4,11 @@
         [clojure.java.shell :only [sh]]
         [clojure.string :only [split]]))
 
-(defonce basebpm 128.0)
+(def basebpm (atom 128.0))
 
-(def metro (metronome basebpm))
+(def metro (metronome @basebpm))
 
-(def bpm (atom basebpm))
+(def bpm (atom @basebpm))
 
 (defn loadavg
   "Gets load average of the machine"
@@ -16,14 +16,14 @@
   (Float. (second (split (:out (sh "sysctl" "-n" "vm.loadavg")) #" "))))
 
 (defn updatemetro
-  ""
+  "Updates the metronome to use the bpm adjusted by the current load average"
   [metro, bpm]
   (let [p (promise)]
     {:future (future 
                (let [t (Thread/currentThread)]
                 (deliver p t)
                 (while true 
-                  (let [newbpm (* (loadavg) basebpm)]
+                  (let [newbpm (* (loadavg) @basebpm)]
                            (Thread/sleep 500)
                            (reset! bpm newbpm)
                            (metro-bpm metro newbpm)
@@ -38,15 +38,27 @@
 ;(future-cancel (:future update-worker))
 
 ;(stop)
+(definst testy [freq 440 length 3 amp 1 rate 6]
+  (* amp
+     (line:kr 1 0 length FREE)
+     (saw (+ freq (sin-osc:kr rate))))
+  )
+
+(inst-fx! testy fx-distortion2)
+
 
 (defn player
-  "I don't do a whole lot."
+  "Drum program loop suitable for live editing"
   [beat]
-  (prn beat)
-  (at (metro beat) (kick))
-  (when (= 0 (mod beat 8)) (at (metro (+ 0.5 beat)) (kick)))
-  (at (metro (+ 0.5 beat)) (closed-hat))
+  (doseq [x [0 1]]
+    (at (metro (+ (* x 0.5) beat)) (closed-hat))
+    )
+  (at (metro beat) (kick) (testy 50 0.4 5 6))
+  (when (= 0 (mod beat 8)) (at (metro (+ 0.5 beat)) (kick) (testy 60 0.4 5 6)))
+  (at (metro (+ 0.5 beat)) (open-hat))
   (apply-by (metro (inc beat)) #'player (inc beat) [])
   )
 
-(player (metro))
+;(reset! basebpm 200)
+
+;(player (metro))
