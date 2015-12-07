@@ -27,14 +27,13 @@
                            (Thread/sleep 500)
                            (reset! bpm newbpm)
                            (metro-bpm metro newbpm)
-                           (println bpm)
                            ))))
      :thread @p}))
 
-(def update-worker (updatemetro metro bpm))
+;(def update-worker (updatemetro metro bpm))
 
-(:thread update-worker)
-(:future update-worker)
+;(:thread update-worker)
+;(:future update-worker)
 ;(future-cancel (:future update-worker))
 
 ;(stop)
@@ -70,4 +69,4 @@
 ;(reset! basebpm 200)
 
 ;(drum-player (metro))
-(buzz-player (metro))
+;(buzz-player (metro))

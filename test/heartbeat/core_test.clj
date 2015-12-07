@@ -2,6 +2,8 @@
   (:require [clojure.test :refer :all]
             [heartbeat.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest updatemetro-worker-can-be-killed
+  (testing "When a metro update worker is created, it have it's future 
+           referenced and cancelled"
+    (let [worker (updatemetro metro bpm)]
+    (is (true? (future-cancel (:future worker)))))))
