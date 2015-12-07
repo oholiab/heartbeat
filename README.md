@@ -9,7 +9,7 @@ all your tabs open
 
 ## Usage
 
-Why would you want to use it? (requires leinengen)
+Why would you want to use it? (requires [leiningen](http://leiningen.org/))
 
     cd heartbeat
     lein repl #will install all deps and the like
