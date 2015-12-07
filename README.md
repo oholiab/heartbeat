@@ -9,7 +9,29 @@ all your tabs open
 
 ## Usage
 
-Why would you want to use it? (use leinengen, lein repl, have fun)
+Why would you want to use it? (requires leinengen)
+
+    cd heartbeat
+    lein repl #will install all deps and the like
+    ...
+
+Then at the repl prompt:
+
+    user=> (use 'heartbeat.core)
+    user=> (def update-worker (updatemetro metro bpm)
+    user=> (drum-player (metro))
+    user=> (buzz-player (metro))
+
+You should be hearing awful, awful noises by now that modulate in speed
+depending on how hard your laptop is working... If it's insanely fast you can
+lower it or raise it with
+
+    user=> (swap! basebpm - 20)
+    user=> (swap! basebpm + 20)
+
+Or set it with
+
+    user=> (reset! basebpm 128)
 
 ## License
 
