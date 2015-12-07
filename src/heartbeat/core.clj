@@ -30,11 +30,6 @@
                            ))))
      :thread @p}))
 
-;(def update-worker (updatemetro metro bpm))
-
-;(:thread update-worker)
-;(:future update-worker)
-;(future-cancel (:future update-worker))
 
 ;(stop)
 (definst testy [freq 440 length 3 amp 1 rate 6]
@@ -66,7 +61,19 @@
   (apply-by (metro (inc beat)) #'drum-player (inc beat) [])
   )
 
-;(reset! basebpm 200)
+;; Some controls:
 
+;; Change the base bpm to something else to speed up or slow down the whole thing
+;(reset! basebpm 100)
+
+;; Define an update-worker to update the bpm from the LA
+;(def update-worker (updatemetro metro bpm))
+
+;; Controls to kill the update-worker
+;(:thread update-worker)
+;(:future update-worker)
+;(future-cancel (:future update-worker))
+
+;; Play the drum part and the buzzy synth part
 ;(drum-player (metro))
 ;(buzz-player (metro))
